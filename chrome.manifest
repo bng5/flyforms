@@ -1,2 +1,5 @@
-
-
+content flyforms chrome/content/
+# locale	flyforms es-UY chrome/locale/es-UY/
+# locale	flyforms en-US chrome/locale/en-US/
+overlay chrome://browser/content/browser.xul chrome://flyforms/content/browserOverlay.xul
+skin flyforms classic/1.0 chrome/skin/
