@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
 <!DOCTYPE window SYSTEM "chrome://flyforms/locale/flyforms.dtd">
-<window  title="Ventana"
-    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<window id="ventana" title="Ventana"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    xmlns:html="http://www.w3.org/1999/xhtml">
 
-<hbox>
-  <label value="Ventana"/>
-</hbox>
+<vbox>
+  <hbox>
+    <vbox>
+      <label control="destino" value="Destino:" />
+      <label control="metodo" value="Método:" />
+      <label control="auth" value="Autenticación:" />
+      <label control="contenido_tipo" value="Tipo de Contenido:" />
+      <label control="login" value="Login:"/>
+      <label control="pass" value="Password:"/>
+    </vbox>
+    <vbox>
+      <html:input type="text" name="destino" id="destino" size="60" />
 
+<menulist editable="true" id="metodo">
+    <!-- onchange="mostrarCampos(this.options[this.selectedIndex].value)" -->
+    <menupopup>
+        <menuitem value="POST" label="POST"/>
+        <menuitem value="GET" label="GET"/>
+        <menuitem value="PUT" label="PUT"/>
+        <menuitem value="DELETE" label="DELETE"/>
+        <menuitem value="HEAD" label="HEAD"/>
+        <menuitem value="OPTIONS" label="OPTIONS"/>
+        <menuitem value="TRACE" label="TRACE"/>
+    </menupopup>
+</menulist>
+
+      <menulist id="auth_method">
+        <menupopup>
+<menuitem value="Basic" label="Basic" />
+        </menupopup>
+      </menulist>
+
+<html:input type="text" name="auth_us" id="auth" /> <html:input type="password" name="auth_pwd" />
+      <menulist id="contenido_tipo">
+<menupopup>
+<menuitem value="application/x-www-form-urlencoded" label="x-www-form-urlencoded" />
+</menupopup>
+</menulist>
+      <textbox id="login"/>
+      <textbox id="pass"/>
+    </vbox>
+  </hbox>
+  <button id="ok" label="OK"/>
+  <button id="cancel" label="Cancel"/>
+  <button label="Guardar modelo" onclick="alert('Hay que implementarlo')" />
+  <button label="Enviar" />
+
+<html:ul>
+  <html:li>Campos <a href="#" onclick="return agCampo()">+</a>
+   <html:ul id="campos">
+    <html:li><input type="text" name="clave" /> → <input type="text" name="valor" />  <a onclick="this.parentNode.parentNode.removeChild(this.parentNode)"> - </a></html:li>
+   </html:ul>
+  </html:li>
+</html:ul>
+</vbox>
 </window>

@@ -8,13 +8,14 @@
   </menupopup>
   
   <menupopup id="menuWebDeveloperPopup">
-    <menuitem label="Abrir ventana" key="key_openEmptySidebar" 
+              <!--key="key_openEmptySidebar"--> 
+    <menuitem label="Abrir ventana"
       oncommand="toOpenWindowByType('global:flyforms', 'chrome://flyforms/content/window.xul');" />
   </menupopup>
   
-  <keyset id="mainKeyset">
+<!--  <keyset id="mainKeyset">
     <key id="key_openEmptySidebar" command="viewEmptySidebar" />
-  </keyset>
+  </keyset>-->
   
   <broadcasterset id="mainBroadcasterSet"> 
     <broadcaster id="viewEmptySidebar" 
