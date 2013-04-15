@@ -2,62 +2,145 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css" ?>
 <!DOCTYPE window SYSTEM "chrome://flyforms/locale/flyforms.dtd">
 <window id="ventana" title="Ventana"
-    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-    xmlns:html="http://www.w3.org/1999/xhtml">
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml">
+
+<script type="application/javascript">
+<![CDATA[
+
+
+
+
+function sendRequest() {
+    let url = document.getElementById('destino').value;
+    let method = document.getElementById('metodo').value;
+    if(url == '' || method == '') {
+        return;
+    }
+    let request = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                .createInstance(Components.interfaces.nsIXMLHttpRequest);
+    request.onload = function(aEvent) {
+        console.log(this.status+' '+this.statusText);
+        console.log(this.getAllResponseHeaders());
+        console.log("Response Text: " + aEvent.target.responseText);
+    };
+    request.onerror = function(aEvent) {
+        window.alert("Error Status: " + aEvent.target.status);
+    };
+    request.open(method, url, true);
+    request.send(null);
+console.log(request);
+//request.open("POST", url, true);
+//request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//request.send("data=hello&version=2");
+}
+
+]]>
+  </script> 
 
 <vbox>
-  <hbox>
-    <vbox>
-      <label control="destino" value="Destino:" />
-      <label control="metodo" value="Método:" />
-      <label control="auth" value="Autenticación:" />
-      <label control="contenido_tipo" value="Tipo de Contenido:" />
-      <label control="login" value="Login:"/>
-      <label control="pass" value="Password:"/>
-    </vbox>
-    <vbox>
-      <html:input type="text" name="destino" id="destino" size="60" />
+    
 
-<menulist editable="true" id="metodo">
+  <grid>
+    <columns>
+      <column />
+      <column />
+    </columns>
+    <rows>
+      <row>
+                <label control="destino" value="Destino:" />
+                <textbox id="destino" value="http://bng5.net/tools/request/format/plain" />
+      </row>
+      <row>
+                <label control="metodo" value="Método:" />
+                <menulist editable="true" id="metodo">
     <!-- onchange="mostrarCampos(this.options[this.selectedIndex].value)" -->
-    <menupopup>
-        <menuitem value="POST" label="POST"/>
-        <menuitem value="GET" label="GET"/>
-        <menuitem value="PUT" label="PUT"/>
-        <menuitem value="DELETE" label="DELETE"/>
-        <menuitem value="HEAD" label="HEAD"/>
-        <menuitem value="OPTIONS" label="OPTIONS"/>
-        <menuitem value="TRACE" label="TRACE"/>
-    </menupopup>
-</menulist>
-
-      <menulist id="auth_method">
-        <menupopup>
-<menuitem value="Basic" label="Basic" />
-        </menupopup>
-      </menulist>
-
-<html:input type="text" name="auth_us" id="auth" /> <html:input type="password" name="auth_pwd" />
-      <menulist id="contenido_tipo">
-<menupopup>
-<menuitem value="application/x-www-form-urlencoded" label="x-www-form-urlencoded" />
-</menupopup>
-</menulist>
-      <textbox id="login"/>
-      <textbox id="pass"/>
-    </vbox>
-  </hbox>
-  <button id="ok" label="OK"/>
-  <button id="cancel" label="Cancel"/>
-  <button label="Guardar modelo" onclick="alert('Hay que implementarlo')" />
-  <button label="Enviar" />
-
-<html:ul>
-  <html:li>Campos <a href="#" onclick="return agCampo()">+</a>
-   <html:ul id="campos">
-    <html:li><input type="text" name="clave" /> → <input type="text" name="valor" />  <a onclick="this.parentNode.parentNode.removeChild(this.parentNode)"> - </a></html:li>
-   </html:ul>
-  </html:li>
-</html:ul>
+                    <menupopup>
+                        <menuitem value="POST" label="POST"/>
+                        <menuitem value="GET" label="GET"/>
+                        <menuitem value="PUT" label="PUT"/>
+                        <menuitem value="DELETE" label="DELETE"/>
+                        <menuitem value="HEAD" label="HEAD"/>
+                        <menuitem value="OPTIONS" label="OPTIONS"/>
+                        <menuitem value="TRACE" label="TRACE"/>
+                    </menupopup>
+                </menulist>
+      </row>
+      <row>
+                <label control="contenido_tipo" value="Tipo de Contenido:" />
+                <menulist id="contenido_tipo">
+                    <menupopup>
+                        <menuitem value="application/x-www-form-urlencoded" label="x-www-form-urlencoded" />
+                    </menupopup>
+                </menulist>
+      </row>
+    </rows>
+  </grid>
 </vbox>
+
+
+
+<!--      <label control="auth" value="Autenticación:" />-->
+<!--                <label control="login" value="Login:"/>
+                <label control="pass" value="Password:"/>-->
+
+
+<!--                <menulist id="auth_method">
+                    <menupopup>
+                        <menuitem value="Basic" label="Basic" />
+                    </menupopup>
+                </menulist>-->
+
+                <!--<html:input type="text" name="auth_us" id="auth" /> <html:input type="password" name="auth_pwd" />-->
+                
+<!--                <textbox id="login"/>
+                <textbox id="pass"/>-->
+
+        
+        
+        
+<!--var mainWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIWebNavigation)
+                   .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+                   .rootTreeItem
+                   .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIDOMWindow);
+
+mainWindow.getBrowser().selectedBrowser.contentWindow.location.href;-->
+
+<!--gBrowser.contentWindow.location.href also works -->
+
+<!--function getCurrentURL{
+
+    var currentWindow = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow("navigator:browser");
+
+    var currBrowser = currentWindow.getBrowser();
+    var currURL = currBrowser.currentURI.spec;
+
+    return currURL;
+}-->
+
+    <vbox>
+        <button label="opener"  oncommand="window.opener.console.log(window.opener);return false;window.opener.document.location.href='http://bng5.net/tools/request/format/plain'" />
+        <button label="window"  oncommand="console.log(content);return false;content.wrappedJSObject.location.href='http://bng5.net/tools/request/format/plain'" />
+        <button label="window"  oncommand="gBrowser.contentDocument.location.href='http://bng5.net/tools/request/format/plain'" />
+    </vbox>
+    
+    <vbox>
+        <button label="Guardar modelo" onclick="alert('Hay que implementarlo')" />
+        <button id="ok"  label="Enviar" oncommand="sendRequest();" />
+
+        <html:ul>
+            <html:li>Campos 
+                <html:a href="#" onclick="return agCampo()">+</html:a>
+                <html:ul id="campos">
+                    <html:li>
+                        <html:input type="text" name="clave" /> → 
+                        <html:input type="text" name="valor" />  
+                        <html:a onclick="this.parentNode.parentNode.removeChild(this.parentNode)"> - </html:a>
+                    </html:li>
+                </html:ul>
+            </html:li>
+        </html:ul>
+    </vbox>
 </window>

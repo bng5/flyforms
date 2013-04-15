@@ -11,6 +11,9 @@
               <!--key="key_openEmptySidebar"--> 
     <menuitem label="Abrir ventana"
       oncommand="toOpenWindowByType('global:flyforms', 'chrome://flyforms/content/window.xul');" />
+    <menuitem label="Abrir ventana 2"
+      oncommand="window.open('chrome://flyforms/content/window.xul',
+                      'flyForms', 'chrome,centerscreen');" />
   </menupopup>
   
 <!--  <keyset id="mainKeyset">
