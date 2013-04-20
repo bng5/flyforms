@@ -3,15 +3,45 @@
 <!DOCTYPE window SYSTEM "chrome://flyforms/locale/flyforms.dtd">
 <window id="ventana" title="Ventana"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        xmlns:html="http://www.w3.org/1999/xhtml">
+        xmlns:html="http://www.w3.org/1999/xhtml" onload="salida_debug(window)">
 
-<script type="application/javascript">
+    <script type="application/javascript">
 <![CDATA[
 
 
+function salida_debug(obj) {
+    var salida = document.getElementById('treeid').childNodes[1];
 
+    while(salida.firstChild) {
+        salida.removeChild(salida.firstChild);
+    }
+
+/*
+            <treechildren>
+                <treeitem container="true" open="true">         
+                    <treerow>         
+                        <treecell label="item label 1"/>
+                        <treecell label="item label 2"/>
+                        <treecell label="item label 3"/>
+                    </treerow>
+                    <treechildren>         
+                        <treeitem container="true" open="true">         
+                            <treerow>
+                                <treecell label="subitem label"/>
+                                <treecell label="subitem label"/>
+                                <treecell label="subitem label"/>
+                            </treerow>         
+                        </treeitem>         
+                    </treechildren>         
+                </treeitem>         
+            </treechildren>
+*/
+//    pre.appendChild(document.createTextNode(obj));
+}
 
 function sendRequest() {
+
+
     let url = document.getElementById('destino').value;
     let method = document.getElementById('metodo').value;
     if(url == '' || method == '') {
@@ -20,63 +50,96 @@ function sendRequest() {
     let request = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
                 .createInstance(Components.interfaces.nsIXMLHttpRequest);
     request.onload = function(aEvent) {
-        console.log(this.status+' '+this.statusText);
-        console.log(this.getAllResponseHeaders());
-        console.log("Response Text: " + aEvent.target.responseText);
+        var tab = window.opener.gBrowser.contentDocument;
+        while(tab.firstChild) {
+            tab.removeChild(tab.firstChild);
+        }
+window.opener.console.log(this.channel);
+
+/*
+        var groupbox, caption;
+
+        var w = tab.appendChild(tab.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'window'));
+        groupbox = w.appendChild(tab.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'groupbox'));
+        caption = groupbox.appendChild(tab.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'caption'));
+        caption.setAttribute('label', 'Cabeceras petición');
+
+        description = groupbox.appendChild(tab.createElementNS('http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul', 'description'));
+        description.appendChild(tab.createTextNode(this.getAllResponseHeaders()));
+return;
+*/
+
+        var html = tab.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'html'));
+        var body = html.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'body'));
+        var h2 = body.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'h2'));
+        h2.appendChild(tab.createTextNode('Cabeceras petición'));
+        
+        var pre = body.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'pre'));
+        //pre.appendChild(tab.createTextNode(this.channel.getRequestHeader()));
+        
+        var h23 = body.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'h2'));
+        h23.appendChild(tab.createTextNode('Cabeceras respuesta'));
+        var pre2 = body.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'pre'));
+        pre2.appendChild(tab.createTextNode(this.getAllResponseHeaders()));
+
+        var h24 = body.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'h2'));
+        h24.appendChild(tab.createTextNode('Cuerpo'));
+        var pre3 = body.appendChild(tab.createElementNS('http://www.w3.org/1999/xhtml', 'pre'));
+        pre3.appendChild(tab.createTextNode(this.responseText));
+        //salida_debug(this.status+' '+this.statusText);
     };
     request.onerror = function(aEvent) {
         window.alert("Error Status: " + aEvent.target.status);
     };
     request.open(method, url, true);
     request.send(null);
-console.log(request);
+window.opener.console.log(request);
+//window.opener.console.log(request);
 //request.open("POST", url, true);
 //request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 //request.send("data=hello&version=2");
 }
 
 ]]>
-  </script> 
+    </script> 
 
-<vbox>
-    
-
-  <grid>
-    <columns>
-      <column />
-      <column />
-    </columns>
-    <rows>
-      <row>
-                <label control="destino" value="Destino:" />
-                <textbox id="destino" value="http://bng5.net/tools/request/format/plain" />
-      </row>
-      <row>
-                <label control="metodo" value="Método:" />
-                <menulist editable="true" id="metodo">
+    <vbox>
+        <grid>
+            <columns>
+                <column />
+                <column />
+            </columns>
+            <rows>
+                <row>
+                    <label control="destino" value="Destino:" />
+                    <textbox id="destino" value="http://bng5.net/tools/request/format/plain" />
+                </row>
+                <row>
+                    <label control="metodo" value="Método:" />
+                    <menulist editable="true" id="metodo">
     <!-- onchange="mostrarCampos(this.options[this.selectedIndex].value)" -->
-                    <menupopup>
-                        <menuitem value="POST" label="POST"/>
-                        <menuitem value="GET" label="GET"/>
-                        <menuitem value="PUT" label="PUT"/>
-                        <menuitem value="DELETE" label="DELETE"/>
-                        <menuitem value="HEAD" label="HEAD"/>
-                        <menuitem value="OPTIONS" label="OPTIONS"/>
-                        <menuitem value="TRACE" label="TRACE"/>
-                    </menupopup>
-                </menulist>
-      </row>
-      <row>
-                <label control="contenido_tipo" value="Tipo de Contenido:" />
-                <menulist id="contenido_tipo">
-                    <menupopup>
-                        <menuitem value="application/x-www-form-urlencoded" label="x-www-form-urlencoded" />
-                    </menupopup>
-                </menulist>
-      </row>
-    </rows>
-  </grid>
-</vbox>
+                        <menupopup>
+                            <menuitem value="POST" label="POST"/>
+                            <menuitem value="GET" label="GET"/>
+                            <menuitem value="PUT" label="PUT"/>
+                            <menuitem value="DELETE" label="DELETE"/>
+                            <menuitem value="HEAD" label="HEAD"/>
+                            <menuitem value="OPTIONS" label="OPTIONS"/>
+                            <menuitem value="TRACE" label="TRACE"/>
+                        </menupopup>
+                    </menulist>
+                </row>
+                <row>
+                    <label control="contenido_tipo" value="Tipo de Contenido:" />
+                    <menulist id="contenido_tipo">
+                        <menupopup>
+                            <menuitem value="application/x-www-form-urlencoded" label="x-www-form-urlencoded" />
+                        </menupopup>
+                    </menulist>
+                </row>
+            </rows>
+        </grid>
+    </vbox>
 
 
 
@@ -121,12 +184,12 @@ mainWindow.getBrowser().selectedBrowser.contentWindow.location.href;-->
 }-->
 
     <vbox>
-        <button label="opener"  oncommand="window.opener.console.log(window.opener);return false;window.opener.document.location.href='http://bng5.net/tools/request/format/plain'" />
-        <button label="window"  oncommand="console.log(content);return false;content.wrappedJSObject.location.href='http://bng5.net/tools/request/format/plain'" />
-        <button label="window"  oncommand="gBrowser.contentDocument.location.href='http://bng5.net/tools/request/format/plain'" />
+        <button label="enviar"  oncommand="sendRequest();" />
+        <button label="opener"  oncommand="window.opener.console.log(window.opener);return false; window.opener.document.location.href='http://bng5.net/tools/request/format/plain'" />
+        <button label="window"  oncommand="window.opener.content.wrappedJSObject.location.href='http://bng5.net/tools/request/format/plain';return false;" />
     </vbox>
     
-    <vbox>
+<!--    <vbox>
         <button label="Guardar modelo" onclick="alert('Hay que implementarlo')" />
         <button id="ok"  label="Enviar" oncommand="sendRequest();" />
 
@@ -142,5 +205,22 @@ mainWindow.getBrowser().selectedBrowser.contentWindow.location.href;-->
                 </html:ul>
             </html:li>
         </html:ul>
+    </vbox>-->
+    
+    
+    
+<!--    <vbox flex="1" style="overflow:auto">
+        <description id="salida_debug"></description>
+    </vbox>-->
+    
+    <vbox flex="1" style="overflow:auto">
+        <tree id="treeid" flex="1">         
+            <treecols>
+                <treecol id="treecolid1" label="variable" primary="true" flex="1"/>
+                <treecol id="treecolid2" label="tipo" flex="1"/>
+                <treecol id="treecolid3" label="valor" flex="1"/>
+            </treecols>
+            <treechildren></treechildren>         
+        </tree>
     </vbox>
 </window>
